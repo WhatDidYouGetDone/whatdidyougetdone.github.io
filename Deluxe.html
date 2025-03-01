@@ -2,8 +2,8 @@
 <html lang="no">
 <head>
   <meta charset="UTF-8">
-  <!-- Viewport for responsive design -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Oppdatert viewport som låser zoomnivået til 1 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Oscars Super Food Tracker Deluxe</title>
   <!-- Google Font for futuristisk stil -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
@@ -15,7 +15,6 @@
       --neon-magenta: #ff00ff;
       --accent: rgba(0, 255, 255, 0.2);
     }
-
     body {
       background-color: var(--bg-color);
       color: var(--text-color);
@@ -23,13 +22,12 @@
       margin: 0;
       padding: 20px 0; /* Kun topp- og bunnpadding */
     }
-
     h1 {
       text-align: center;
       color: var(--neon-blue);
       text-shadow: 0 0 10px var(--neon-magenta);
       margin-bottom: 20px;
-      font-size: 1.5em; /* 30% mindre enn standard */
+      font-size: 1.5em; /* ca 30% mindre */
     }
     h2 {
       text-align: center;
@@ -38,8 +36,6 @@
       margin-bottom: 20px;
       font-size: 1em;
     }
-
-    /* TABLE */
     table {
       width: 100%;
       margin: 0 auto 20px auto;
@@ -65,8 +61,6 @@
     tr.meal-row:hover {
       background: rgba(0, 255, 255, 0.1);
     }
-
-    /* Input styling with numeric keyboard */
     input.quantity {
       box-sizing: border-box;
       background: transparent;
@@ -75,7 +69,8 @@
       padding: 5px;
       width: 70px;
       text-align: center;
-      font-size: 1em;
+      font-size: 1em;  /* Font-størrelsen arvet fra foreldre (som er 0.6em) vil være for liten på iOS, men 
+                         nå låst zoomnivået gjør at siden ikke zoomer inn automatisk */
       border-radius: 4px;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
@@ -93,7 +88,6 @@
     input[type=number] {
       -moz-appearance: textfield;
     }
-
     .signature {
       font-size: 0.75em;
       text-align: center;
@@ -101,7 +95,6 @@
       color: var(--neon-magenta);
       opacity: 0.8;
     }
-
     /* Overlay-stiler */
     #mealOverlay {
       position: fixed;
@@ -129,7 +122,6 @@
       color: var(--neon-magenta);
       font-size: 1em;
     }
-
     @media (max-width: 480px) {
       th, td {
         padding: 4px;
@@ -159,7 +151,6 @@
       document.getElementById('total-protein').textContent = Math.round(totalProtein);
       document.getElementById('total-calories').textContent = Math.round(totalCalories);
     }
-
     // Funksjon for å vise overlay med ekstra info
     function showOverlay(mealName, protein, calories) {
       document.getElementById('overlayMealName').textContent = mealName + " (100g)";
@@ -167,11 +158,9 @@
       document.getElementById('overlayCalories').textContent = "Kalorier: " + calories + " kcal";
       document.getElementById('mealOverlay').style.display = "flex";
     }
-
     function hideOverlay() {
       document.getElementById('mealOverlay').style.display = "none";
     }
-
     document.addEventListener("DOMContentLoaded", function() {
       document.querySelectorAll('.meal-row td.meal-name').forEach(function(cell) {
         cell.style.cursor = "pointer";
