@@ -2,6 +2,7 @@
 <html lang="no">
 <head>
   <meta charset="UTF-8">
+  <!-- Viewport for responsive design -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Oscars Super Food Tracker Deluxe</title>
   <!-- Google Font for futuristisk stil -->
@@ -14,52 +15,62 @@
       --neon-magenta: #ff00ff;
       --accent: rgba(0, 255, 255, 0.2);
     }
+
     body {
       background-color: var(--bg-color);
       color: var(--text-color);
       font-family: 'Orbitron', sans-serif;
       margin: 0;
-      padding: 20px 0; /* Kun topp- og bunnpadding */
+      padding: 20px 0; /* Top & bottom padding only */
     }
+
     h1, h2 {
       text-align: center;
       color: var(--neon-blue);
       text-shadow: 0 0 10px var(--neon-magenta);
       margin-bottom: 20px;
     }
+
+    /* TABLE: removed table-layout: fixed; so columns can shrink as needed */
     table {
       width: 100%;
-      max-width: 100%;
       margin: 0 auto 20px auto;
       border-collapse: collapse;
       background: rgba(255, 255, 255, 0.05);
-      table-layout: fixed;
     }
+
+    /* Reduced border to 1px, reduced padding for less horizontal space */
     th, td {
-      padding: 6px 8px;
-      border: 2px solid var(--neon-blue);
+      padding: 5px 6px;
+      border: 1px solid var(--neon-blue);
       text-align: center;
       font-size: 0.8em;
+      word-wrap: break-word;
     }
+
     th {
       background: var(--accent);
       color: var(--neon-blue);
       text-transform: uppercase;
       letter-spacing: 1px;
     }
+
     td {
       color: var(--text-color);
     }
+
     tr.meal-row:hover {
       background: rgba(0, 255, 255, 0.1);
     }
+
+    /* Input styling */
     input.quantity {
       box-sizing: border-box;
       background: transparent;
       color: var(--text-color);
-      border: 2px solid var(--neon-magenta);
-      padding: 8px;
-      width: 80px;
+      border: 1px solid var(--neon-magenta);
+      padding: 6px;
+      width: 70px;
       text-align: center;
       font-size: 1em;
       border-radius: 4px;
@@ -70,8 +81,9 @@
       border-color: var(--neon-blue);
       box-shadow: 0 0 10px var(--neon-blue);
     }
-    /* Fjern spinner-knapper for input type=number */
-    input[type=number]::-webkit-inner-spin-button, 
+
+    /* Remove spinner buttons for number input */
+    input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
       -webkit-appearance: none;
       margin: 0;
@@ -79,6 +91,7 @@
     input[type=number] {
       -moz-appearance: textfield;
     }
+
     .signature {
       font-size: 0.75em;
       text-align: center;
@@ -86,13 +99,12 @@
       color: var(--neon-magenta);
       opacity: 0.8;
     }
-    /* Overlay-stiler */
+
+    /* Overlay styles */
     #mealOverlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.9);
       display: none;
       justify-content: center;
@@ -102,7 +114,7 @@
     #mealOverlay .content {
       background: #1a1a1a;
       padding: 20px;
-      border: 2px solid var(--neon-blue);
+      border: 1px solid var(--neon-blue);
       border-radius: 10px;
       text-align: center;
       max-width: 80%;
@@ -113,13 +125,24 @@
       color: var(--neon-magenta);
       font-size: 1em;
     }
+
+    /* Make text & spacing even smaller on very narrow screens */
+    @media (max-width: 480px) {
+      th, td {
+        padding: 4px;
+        font-size: 0.75em;
+      }
+      input.quantity {
+        padding: 4px;
+        width: 60px;
+      }
+    }
   </style>
   <script>
     function updateTotals() {
       let totalProtein = 0;
       let totalCalories = 0;
       document.querySelectorAll('.meal-row').forEach(function(row) {
-        // Hent protein og kalorier fra data-attributter
         const protein = parseFloat(row.getAttribute('data-protein'));
         const calories = parseFloat(row.getAttribute('data-calories'));
         const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
@@ -133,18 +156,19 @@
       document.getElementById('total-protein').textContent = Math.round(totalProtein);
       document.getElementById('total-calories').textContent = Math.round(totalCalories);
     }
-    // Funksjon for å vise overlay med ekstra info
+
+    // Show overlay with meal info
     function showOverlay(mealName, protein, calories) {
-      // Append " (100g)" direkte til navnet i overlayet
       document.getElementById('overlayMealName').textContent = mealName + " (100g)";
       document.getElementById('overlayProtein').textContent = "Protein: " + protein + " g";
       document.getElementById('overlayCalories').textContent = "Kalorier: " + calories + " kcal";
       document.getElementById('mealOverlay').style.display = "flex";
     }
+
     function hideOverlay() {
       document.getElementById('mealOverlay').style.display = "none";
     }
-    // Legg til klikkhendelse for måltidsnavnet
+
     document.addEventListener("DOMContentLoaded", function() {
       document.querySelectorAll('.meal-row td.meal-name').forEach(function(cell) {
         cell.style.cursor = "pointer";
@@ -161,11 +185,15 @@
 </head>
 <body>
   <h1>Oscars Super Food Tracker Deluxe</h1>
-  
+
   <h2>Totaler for dagen</h2>
-  <p style="text-align: center;">Totalt protein: <span id="total-protein">0</span> g</p>
-  <p style="text-align: center;">Totalt kalorier: <span id="total-calories">0</span></p>
-  
+  <p style="text-align: center;">
+    Totalt protein: <span id="total-protein">0</span> g
+  </p>
+  <p style="text-align: center;">
+    Totalt kalorier: <span id="total-calories">0</span>
+  </p>
+
   <table>
     <tr>
       <th>Måltid</th>
@@ -173,7 +201,7 @@
       <th>Totalt protein (g)</th>
       <th>Totalt kalorier</th>
     </tr>
-    <!-- Radene har data-attributter for protein og kalorier per 100g -->
+    <!-- Example rows with data attributes for protein & calories per 100g -->
     <tr class="meal-row" data-protein="27" data-calories="344">
       <td class="meal-name">Ost</td>
       <td>
@@ -263,12 +291,12 @@
       <td class="total-calories">0</td>
     </tr>
   </table>
-  
+
   <p class="signature">
     "What did you get done last week?"
   </p>
-  
-  <!-- Overlay for visning av ekstra info -->
+
+  <!-- Overlay for extra info -->
   <div id="mealOverlay">
     <div class="content">
       <h3 id="overlayMealName"></h3>
