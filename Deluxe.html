@@ -15,6 +15,7 @@
       --neon-magenta: #ff00ff;
       --accent: rgba(0, 255, 255, 0.2);
     }
+
     body {
       background-color: var(--bg-color);
       color: var(--text-color);
@@ -22,12 +23,14 @@
       margin: 0;
       padding: 20px 0; /* Kun topp- og bunnpadding */
     }
+
+    /* Overskriften uten neonskilt */
     h1 {
       text-align: center;
       color: var(--neon-blue);
       text-shadow: 0 0 10px var(--neon-magenta);
-      margin-bottom: 20px;
-      font-size: 1.5em; /* ca 30% mindre */
+      margin: 0 0 20px 0;
+      font-size: 1.5em;
     }
     h2 {
       text-align: center;
@@ -36,6 +39,7 @@
       margin-bottom: 20px;
       font-size: 1em;
     }
+
     table {
       width: 100%;
       margin: 0 auto 20px auto;
@@ -61,6 +65,7 @@
     tr.meal-row:hover {
       background: rgba(0, 255, 255, 0.1);
     }
+
     input.quantity {
       box-sizing: border-box;
       background: transparent;
@@ -69,8 +74,7 @@
       padding: 5px;
       width: 70px;
       text-align: center;
-      font-size: 1em;  /* Font-størrelsen arvet fra foreldre (som er 0.6em) vil være for liten på iOS, men 
-                         nå låst zoomnivået gjør at siden ikke zoomer inn automatisk */
+      font-size: 1em;
       border-radius: 4px;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
@@ -79,6 +83,7 @@
       border-color: var(--neon-blue);
       box-shadow: 0 0 10px var(--neon-blue);
     }
+
     /* Fjern spinner-knapper for input type=number */
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -88,6 +93,7 @@
     input[type=number] {
       -moz-appearance: textfield;
     }
+
     .signature {
       font-size: 0.75em;
       text-align: center;
@@ -95,7 +101,33 @@
       color: var(--neon-magenta);
       opacity: 0.8;
     }
-    /* Overlay-stiler */
+
+    /* Neon-knapper for å matche sidens estetikk */
+    .button-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .neon-button {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8em;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--neon-magenta);
+      background: transparent;
+      border: 2px solid var(--neon-magenta);
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+      transition: box-shadow 0.3s;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 10px var(--neon-magenta), 0 0 20px var(--neon-magenta);
+    }
+    .neon-button:active {
+      box-shadow: 0 0 5px var(--neon-magenta);
+    }
+
     #mealOverlay {
       position: fixed;
       top: 0;
@@ -131,8 +163,13 @@
         padding: 4px;
         width: 60px;
       }
+      .neon-button {
+        font-size: 0.7em;
+        padding: 8px 16px;
+      }
     }
   </style>
+
   <script>
     function updateTotals() {
       let totalProtein = 0;
@@ -151,17 +188,96 @@
       document.getElementById('total-protein').textContent = Math.round(totalProtein);
       document.getElementById('total-calories').textContent = Math.round(totalCalories);
     }
-    // Funksjon for å vise overlay med ekstra info
+
+    // Viser overlay med ekstra info om et måltid
     function showOverlay(mealName, protein, calories) {
       document.getElementById('overlayMealName').textContent = mealName + " (100g)";
       document.getElementById('overlayProtein').textContent = "Protein: " + protein + " g";
       document.getElementById('overlayCalories').textContent = "Kalorier: " + calories + " kcal";
       document.getElementById('mealOverlay').style.display = "flex";
     }
+
     function hideOverlay() {
       document.getElementById('mealOverlay').style.display = "none";
     }
+
+    // Legg til et nytt måltid i tabellen
+    function addMeal() {
+      var mealName = prompt("Oppgi måltidsnavn:");
+      if (!mealName) return;
+      var protein = prompt("Oppgi protein per 100g (f.eks. 27):");
+      var calories = prompt("Oppgi kalorier per 100g (f.eks. 344):");
+      protein = parseFloat(protein);
+      calories = parseFloat(calories);
+      if (isNaN(protein) || isNaN(calories)) {
+        alert("Ugyldige verdier for protein eller kalorier.");
+        return;
+      }
+      var table = document.getElementById("mealsTable");
+      // Opprett en ny rad i bunnen av tabellen
+      var newRow = table.insertRow(-1);
+      newRow.className = "meal-row";
+      // Sett data-attributter for protein og kalorier
+      newRow.setAttribute("data-protein", protein);
+      newRow.setAttribute("data-calories", calories);
+
+      // Celle for måltidsnavn
+      var cellName = newRow.insertCell(0);
+      cellName.className = "meal-name";
+      cellName.textContent = mealName;
+      cellName.style.cursor = "pointer";
+      // Klikker du på måltidsnavn, åpnes overlay
+      cellName.addEventListener('click', function() {
+        var row = cellName.parentNode;
+        var mealName = cellName.textContent;
+        var protein = row.getAttribute('data-protein');
+        var calories = row.getAttribute('data-calories');
+        showOverlay(mealName, protein, calories);
+      });
+
+      // Celle for mengde
+      var cellQuantity = newRow.insertCell(1);
+      cellQuantity.innerHTML = '<input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0" onfocus="this.select()" onmouseup="return false;" onchange="updateTotals()">';
+      
+      // Celle for totalt protein
+      var cellProt = newRow.insertCell(2);
+      cellProt.className = "total-protein";
+      cellProt.textContent = "0";
+
+      // Celle for totalt kalorier
+      var cellCal = newRow.insertCell(3);
+      cellCal.className = "total-calories";
+      cellCal.textContent = "0";
+
+      // Oppdater totaler
+      updateTotals();
+    }
+
+    // Fjern måltid ved å velge fra en liste
+    function removeMeal() {
+      var rows = document.querySelectorAll('.meal-row');
+      if (rows.length === 0) {
+        alert("Ingen måltider å fjerne.");
+        return;
+      }
+      // Bygg en nummerert liste
+      var list = "";
+      rows.forEach(function(row, index) {
+        var mealName = row.querySelector('.meal-name').textContent;
+        list += (index + 1) + ". " + mealName + "\n";
+      });
+      var choice = prompt("Skriv inn nummeret til måltidet du vil fjerne:\n" + list);
+      var index = parseInt(choice) - 1;
+      if (!isNaN(index) && index >= 0 && index < rows.length) {
+        rows[index].parentNode.removeChild(rows[index]);
+        updateTotals();
+      } else {
+        alert("Ugyldig valg.");
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
+      // Gjør måltidsnavn klikkbare (for overlay)
       document.querySelectorAll('.meal-row td.meal-name').forEach(function(cell) {
         cell.style.cursor = "pointer";
         cell.addEventListener('click', function() {
@@ -178,25 +294,23 @@
 <body>
   <h1>Oscars Super Food Tracker Deluxe</h1>
   
-  <h2>_____________________</h2>
+  <h2>~~~~~~~~~~~~</h2>
   <p style="text-align: center;">Totalt protein: <span id="total-protein">0</span> g</p>
   <p style="text-align: center;">Totalt kalorier: <span id="total-calories">0</span></p>
   
-  <table>
+  <table id="mealsTable">
     <tr>
       <th>Måltid</th>
       <th>Mengde (g)</th>
       <th>Proteiner</th>
       <th>Kalorier</th>
     </tr>
-    <!-- Radene har data-attributter for protein og kalorier per 100g -->
+    <!-- Eksempelrader med data-attributter for protein og kalorier per 100g -->
     <tr class="meal-row" data-protein="27" data-calories="344">
       <td class="meal-name">Ost</td>
       <td>
         <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
-               onfocus="this.select()"
-               onmouseup="return false;"
-               onchange="updateTotals()">
+               onfocus="this.select()" onmouseup="return false;" onchange="updateTotals()">
       </td>
       <td class="total-protein">0</td>
       <td class="total-calories">0</td>
@@ -205,9 +319,7 @@
       <td class="meal-name">Kjøttdeig</td>
       <td>
         <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
-               onfocus="this.select()"
-               onmouseup="return false;"
-               onchange="updateTotals()">
+               onfocus="this.select()" onmouseup="return false;" onchange="updateTotals()">
       </td>
       <td class="total-protein">0</td>
       <td class="total-calories">0</td>
@@ -216,9 +328,7 @@
       <td class="meal-name">Karbonadedeig</td>
       <td>
         <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
-               onfocus="this.select()"
-               onmouseup="return false;"
-               onchange="updateTotals()">
+               onfocus="this.select()" onmouseup="return false;" onchange="updateTotals()">
       </td>
       <td class="total-protein">0</td>
       <td class="total-calories">0</td>
@@ -227,9 +337,7 @@
       <td class="meal-name">Egg</td>
       <td>
         <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
-               onfocus="this.select()"
-               onmouseup="return false;"
-               onchange="updateTotals()">
+               onfocus="this.select()" onmouseup="return false;" onchange="updateTotals()">
       </td>
       <td class="total-protein">0</td>
       <td class="total-calories">0</td>
@@ -238,9 +346,7 @@
       <td class="meal-name">Bacongull</td>
       <td>
         <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
-               onfocus="this.select()"
-               onmouseup="return false;"
-               onchange="updateTotals()">
+               onfocus="this.select()" onmouseup="return false;" onchange="updateTotals()">
       </td>
       <td class="total-protein">0</td>
       <td class="total-calories">0</td>
@@ -249,9 +355,7 @@
       <td class="meal-name">Kylling</td>
       <td>
         <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
-               onfocus="this.select()"
-               onmouseup="return false;"
-               onchange="updateTotals()">
+               onfocus="this.select()" onmouseup="return false;" onchange="updateTotals()">
       </td>
       <td class="total-protein">0</td>
       <td class="total-calories">0</td>
@@ -260,9 +364,7 @@
       <td class="meal-name">Melk</td>
       <td>
         <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
-               onfocus="this.select()"
-               onmouseup="return false;"
-               onchange="updateTotals()">
+               onfocus="this.select()" onmouseup="return false;" onchange="updateTotals()">
       </td>
       <td class="total-protein">0</td>
       <td class="total-calories">0</td>
@@ -271,14 +373,18 @@
       <td class="meal-name">Brus</td>
       <td>
         <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
-               onfocus="this.select()"
-               onmouseup="return false;"
-               onchange="updateTotals()">
+               onfocus="this.select()" onmouseup="return false;" onchange="updateTotals()">
       </td>
       <td class="total-protein">0</td>
       <td class="total-calories">0</td>
     </tr>
   </table>
+  
+  <!-- Knapper plassert i en container med neon-stil -->
+  <div class="button-container">
+    <button class="neon-button" onclick="addMeal()">Legg til måltid</button>
+    <button class="neon-button" onclick="removeMeal()">Fjern måltid</button>
+  </div>
   
   <p class="signature">
     "Smärta är vekhet som lämnar kroppen. Ha en bra dag."
