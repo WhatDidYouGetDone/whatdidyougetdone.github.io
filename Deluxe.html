@@ -24,7 +24,6 @@
       padding: 20px 0; /* Kun topp- og bunnpadding */
     }
 
-    /* Reduserte overskrifter */
     h1 {
       text-align: center;
       color: var(--neon-blue);
@@ -40,15 +39,13 @@
       font-size: 1em;
     }
 
-    /* TABLE: Fjernet table-layout: fixed; for naturlig tilpasning */
+    /* TABLE */
     table {
       width: 100%;
       margin: 0 auto 20px auto;
       border-collapse: collapse;
       background: rgba(255, 255, 255, 0.05);
     }
-
-    /* Reduserte fontstørrelser i celler */
     th, td {
       padding: 5px 6px;
       border: 1px solid var(--neon-blue);
@@ -69,7 +66,7 @@
       background: rgba(0, 255, 255, 0.1);
     }
 
-    /* Input styling */
+    /* Input styling with numeric keyboard */
     input.quantity {
       box-sizing: border-box;
       background: transparent;
@@ -88,7 +85,7 @@
       box-shadow: 0 0 10px var(--neon-blue);
     }
     /* Fjern spinner-knapper for input type=number */
-    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
       -webkit-appearance: none;
       margin: 0;
@@ -133,7 +130,6 @@
       font-size: 1em;
     }
 
-    /* Enda mindre tekst på svært små skjermer */
     @media (max-width: 480px) {
       th, td {
         padding: 4px;
@@ -208,7 +204,7 @@
     <tr class="meal-row" data-protein="27" data-calories="344">
       <td class="meal-name">Ost</td>
       <td>
-        <input type="number" class="quantity" value="0" min="0"
+        <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
                onfocus="this.select()"
                onmouseup="return false;"
                onchange="updateTotals()">
@@ -219,7 +215,7 @@
     <tr class="meal-row" data-protein="20" data-calories="205">
       <td class="meal-name">Kjøttdeig</td>
       <td>
-        <input type="number" class="quantity" value="0" min="0"
+        <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
                onfocus="this.select()"
                onmouseup="return false;"
                onchange="updateTotals()">
@@ -230,7 +226,7 @@
     <tr class="meal-row" data-protein="22" data-calories="133">
       <td class="meal-name">Karbonadedeig</td>
       <td>
-        <input type="number" class="quantity" value="0" min="0"
+        <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
                onfocus="this.select()"
                onmouseup="return false;"
                onchange="updateTotals()">
@@ -241,7 +237,7 @@
     <tr class="meal-row" data-protein="13" data-calories="148">
       <td class="meal-name">Egg L (~65g)</td>
       <td>
-        <input type="number" class="quantity" value="0" min="0"
+        <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
                onfocus="this.select()"
                onmouseup="return false;"
                onchange="updateTotals()">
@@ -252,7 +248,7 @@
     <tr class="meal-row" data-protein="67" data-calories="533">
       <td class="meal-name">Bacongull</td>
       <td>
-        <input type="number" class="quantity" value="0" min="0"
+        <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
                onfocus="this.select()"
                onmouseup="return false;"
                onchange="updateTotals()">
@@ -263,7 +259,7 @@
     <tr class="meal-row" data-protein="23" data-calories="110">
       <td class="meal-name">Kylling</td>
       <td>
-        <input type="number" class="quantity" value="0" min="0"
+        <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
                onfocus="this.select()"
                onmouseup="return false;"
                onchange="updateTotals()">
@@ -274,7 +270,7 @@
     <tr class="meal-row" data-protein="3.3" data-calories="64">
       <td class="meal-name">Melk</td>
       <td>
-        <input type="number" class="quantity" value="0" min="0"
+        <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
                onfocus="this.select()"
                onmouseup="return false;"
                onchange="updateTotals()">
@@ -285,7 +281,7 @@
     <tr class="meal-row" data-protein="0" data-calories="42">
       <td class="meal-name">Brus</td>
       <td>
-        <input type="number" class="quantity" value="0" min="0"
+        <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
                onfocus="this.select()"
                onmouseup="return false;"
                onchange="updateTotals()">
