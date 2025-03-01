@@ -30,7 +30,7 @@
       color: var(--neon-blue);
       text-shadow: 0 0 10px var(--neon-magenta);
       margin: 0 0 20px 0;
-      font-size: 1.5em;
+      font-size: 1.5em; /* ca 30% mindre */
     }
     h2 {
       text-align: center;
@@ -83,7 +83,6 @@
       border-color: var(--neon-blue);
       box-shadow: 0 0 10px var(--neon-blue);
     }
-
     /* Fjern spinner-knapper for input type=number */
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -109,12 +108,15 @@
     }
     .neon-button {
       font-family: 'Orbitron', sans-serif;
-      font-size: 0.8em;
+      /* Redusert skriftstørrelse med 20% (fra 0.8em til 0.64em) */
+      font-size: 0.64em;
       letter-spacing: 1px;
       text-transform: uppercase;
+      /* Tekstfargen neon-magenta */
       color: var(--neon-magenta);
       background: transparent;
-      border: 2px solid var(--neon-magenta);
+      /* Ytre kant i neon-blå for å matche tabellen */
+      border: 2px solid var(--neon-blue);
       padding: 10px 20px;
       border-radius: 4px;
       cursor: pointer;
@@ -122,10 +124,10 @@
       transition: box-shadow 0.3s;
     }
     .neon-button:hover {
-      box-shadow: 0 0 10px var(--neon-magenta), 0 0 20px var(--neon-magenta);
+      box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
     }
     .neon-button:active {
-      box-shadow: 0 0 5px var(--neon-magenta);
+      box-shadow: 0 0 5px var(--neon-blue);
     }
 
     #mealOverlay {
@@ -154,6 +156,7 @@
       color: var(--neon-magenta);
       font-size: 1em;
     }
+
     @media (max-width: 480px) {
       th, td {
         padding: 4px;
@@ -164,7 +167,7 @@
         width: 60px;
       }
       .neon-button {
-        font-size: 0.7em;
+        font-size: 0.6em; /* litt mindre på mobile */
         padding: 8px 16px;
       }
     }
@@ -276,6 +279,7 @@
       }
     }
 
+    // Kalles når siden har lastet inn
     document.addEventListener("DOMContentLoaded", function() {
       // Gjør måltidsnavn klikkbare (for overlay)
       document.querySelectorAll('.meal-row td.meal-name').forEach(function(cell) {
@@ -305,7 +309,7 @@
       <th>Proteiner</th>
       <th>Kalorier</th>
     </tr>
-    <!-- Eksempelrader med data-attributter for protein og kalorier per 100g -->
+    <!-- Beholder eksempler på mange matvarer -->
     <tr class="meal-row" data-protein="27" data-calories="344">
       <td class="meal-name">Ost</td>
       <td>
@@ -380,7 +384,6 @@
     </tr>
   </table>
   
-  <!-- Knapper plassert i en container med neon-stil -->
   <div class="button-container">
     <button class="neon-button" onclick="addMeal()">Legg til måltid</button>
     <button class="neon-button" onclick="removeMeal()">Fjern måltid</button>
