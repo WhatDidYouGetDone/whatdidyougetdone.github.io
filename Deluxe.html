@@ -2,7 +2,7 @@
 <html lang="no">
 <head>
   <meta charset="UTF-8">
-  <!-- Oppdatert viewport som låser zoomnivået til 1 -->
+  <!-- Låser zoomnivået for mobil -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Oscars Super Food Tracker Deluxe</title>
   <!-- Google Font for futuristisk stil -->
@@ -15,6 +15,7 @@
       --neon-magenta: #ff00ff;
       --accent: rgba(0, 255, 255, 0.2);
     }
+
     body {
       background-color: var(--bg-color);
       color: var(--text-color);
@@ -22,13 +23,30 @@
       margin: 0;
       padding: 20px 0; /* Kun topp- og bunnpadding */
     }
-    h1 {
+
+    /* Neon-boks som omslutter overskriften */
+    .neon-sign {
+      display: inline-block;
+      margin: 0 auto 20px auto;
+      padding: 10px 20px;
+      background: #000;
+      border: 2px solid var(--neon-blue);
+      box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+      border-radius: 8px;
       text-align: center;
-      color: var(--neon-blue);
-      text-shadow: 0 0 10px var(--neon-magenta);
-      margin-bottom: 20px;
-      font-size: 1.5em; /* ca 30% mindre */
     }
+    .neon-sign h1 {
+      margin: 0;
+      font-size: 1.5em;
+      color: var(--neon-blue);
+      /* Flere lag med tekstskygge for en "glød" */
+      text-shadow:
+        0 0 5px var(--neon-blue),
+        0 0 10px var(--neon-blue),
+        0 0 20px var(--neon-blue),
+        0 0 30px var(--neon-blue);
+    }
+
     h2 {
       text-align: center;
       color: var(--neon-blue);
@@ -36,12 +54,14 @@
       margin-bottom: 20px;
       font-size: 1em;
     }
+
     table {
       width: 100%;
       margin: 0 auto 20px auto;
       border-collapse: collapse;
       background: rgba(255, 255, 255, 0.05);
     }
+
     th, td {
       padding: 5px 6px;
       border: 1px solid var(--neon-blue);
@@ -61,6 +81,7 @@
     tr.meal-row:hover {
       background: rgba(0, 255, 255, 0.1);
     }
+
     input.quantity {
       box-sizing: border-box;
       background: transparent;
@@ -69,8 +90,7 @@
       padding: 5px;
       width: 70px;
       text-align: center;
-      font-size: 1em;  /* Font-størrelsen arvet fra foreldre (som er 0.6em) vil være for liten på iOS, men 
-                         nå låst zoomnivået gjør at siden ikke zoomer inn automatisk */
+      font-size: 1em;
       border-radius: 4px;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
@@ -88,6 +108,7 @@
     input[type=number] {
       -moz-appearance: textfield;
     }
+
     .signature {
       font-size: 0.75em;
       text-align: center;
@@ -95,6 +116,7 @@
       color: var(--neon-magenta);
       opacity: 0.8;
     }
+
     /* Overlay-stiler */
     #mealOverlay {
       position: fixed;
@@ -122,6 +144,7 @@
       color: var(--neon-magenta);
       font-size: 1em;
     }
+
     @media (max-width: 480px) {
       th, td {
         padding: 4px;
@@ -176,20 +199,23 @@
   </script>
 </head>
 <body>
-  <h1>Oscars Super Food Tracker Deluxe</h1>
+  <!-- Neon-skiltet rundt overskriften -->
+  <div class="neon-sign">
+    <h1>Oscars Super Food Tracker Deluxe</h1>
+  </div>
   
-  <h2>~~~~~~~~~~~~</h2>
+  <h2>Totaler for dagen</h2>
   <p style="text-align: center;">Totalt protein: <span id="total-protein">0</span> g</p>
   <p style="text-align: center;">Totalt kalorier: <span id="total-calories">0</span></p>
   
   <table>
     <tr>
       <th>Måltid</th>
-      <th>Mengde (g)</th>
+      <th>Mengde spist (g)</th>
       <th>Proteiner</th>
       <th>Kalorier</th>
     </tr>
-    <!-- Radene har data-attributter for protein og kalorier per 100g -->
+    <!-- Eksempelrader med data-attributter for protein og kalorier per 100g -->
     <tr class="meal-row" data-protein="27" data-calories="344">
       <td class="meal-name">Ost</td>
       <td>
@@ -224,7 +250,7 @@
       <td class="total-calories">0</td>
     </tr>
     <tr class="meal-row" data-protein="13" data-calories="148">
-      <td class="meal-name">Egg</td>
+      <td class="meal-name">Egg L (~65g)</td>
       <td>
         <input type="number" class="quantity" inputmode="numeric" pattern="[0-9]*" value="0" min="0"
                onfocus="this.select()"
@@ -281,7 +307,7 @@
   </table>
   
   <p class="signature">
-    "Smärta är vekhet som lämnar kroppen. Ha en bra dag."
+    "What did you get done last week?"
   </p>
   
   <!-- Overlay for visning av ekstra info -->
