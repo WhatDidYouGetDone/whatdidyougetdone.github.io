@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oscars Super Food Tracker Deluxe</title>
+  <!-- Google Font for futuristisk stil -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0d0d0d;
+      --text-color: #f0f0f0;
+      --neon-blue: #00ffff;
+      --neon-magenta: #ff00ff;
+      --accent: rgba(0, 255, 255, 0.2);
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      padding: 20px 0; /* Kun topp- og bunnpadding */
+    }
+    h1, h2 {
+      text-align: center;
+      color: var(--neon-blue);
+      text-shadow: 0 0 10px var(--neon-magenta);
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto 20px auto;
+      border-collapse: collapse;
+      background: rgba(255, 255, 255, 0.05);
+      table-layout: fixed;
+    }
+    th, td {
+      padding: 6px 8px;
+      border: 2px solid var(--neon-blue);
+      text-align: center;
+      font-size: 0.8em;
+    }
+    th {
+      background: var(--accent);
+      color: var(--neon-blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    td {
+      color: var(--text-color);
+    }
+    tr.meal-row:hover {
+      background: rgba(0, 255, 255, 0.1);
+    }
+    input.quantity {
+      box-sizing: border-box;
+      background: transparent;
+      color: var(--text-color);
+      border: 2px solid var(--neon-magenta);
+      padding: 8px;
+      width: 80px;
+      text-align: center;
+      font-size: 1em;
+      border-radius: 4px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input.quantity:focus {
+      outline: none;
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 10px var(--neon-blue);
+    }
+    /* Fjern spinner-knapper for input type=number */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    .signature {
+      font-size: 0.75em;
+      text-align: center;
+      margin-top: 40px;
+      color: var(--neon-magenta);
+      opacity: 0.8;
+    }
+    /* Overlay-stiler */
+    #mealOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #mealOverlay .content {
+      background: #1a1a1a;
+      padding: 20px;
+      border: 2px solid var(--neon-blue);
+      border-radius: 10px;
+      text-align: center;
+      max-width: 80%;
+    }
+    #mealOverlay .closeBtn {
+      margin-top: 10px;
+      cursor: pointer;
+      color: var(--neon-magenta);
+      font-size: 1em;
+    }
+  </style>
+  <script>
+    function updateTotals() {
+      let totalProtein = 0;
+      let totalCalories = 0;
+      document.querySelectorAll('.meal-row').forEach(function(row) {
+        // Hent protein og kalorier fra data-attributter
+        const protein = parseFloat(row.getAttribute('data-protein'));
+        const calories = parseFloat(row.getAttribute('data-calories'));
+        const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+        const mealProtein = protein * quantity / 100;
+        const mealCalories = calories * quantity / 100;
+        row.querySelector('.total-protein').textContent = Math.round(mealProtein);
+        row.querySelector('.total-calories').textContent = Math.round(mealCalories);
+        totalProtein += mealProtein;
+        totalCalories += mealCalories;
+      });
+      document.getElementById('total-protein').textContent = Math.round(totalProtein);
+      document.getElementById('total-calories').textContent = Math.round(totalCalories);
+    }
+    // Funksjon for å vise overlay med ekstra info
+    function showOverlay(mealName, protein, calories) {
+      // Append " (100g)" direkte til navnet i overlayet
+      document.getElementById('overlayMealName').textContent = mealName + " (100g)";
+      document.getElementById('overlayProtein').textContent = "Protein: " + protein + " g";
+      document.getElementById('overlayCalories').textContent = "Kalorier: " + calories + " kcal";
+      document.getElementById('mealOverlay').style.display = "flex";
+    }
+    function hideOverlay() {
+      document.getElementById('mealOverlay').style.display = "none";
+    }
+    // Legg til klikkhendelse for måltidsnavnet
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelectorAll('.meal-row td.meal-name').forEach(function(cell) {
+        cell.style.cursor = "pointer";
+        cell.addEventListener('click', function() {
+          var row = cell.parentNode;
+          var mealName = cell.textContent;
+          var protein = row.getAttribute('data-protein');
+          var calories = row.getAttribute('data-calories');
+          showOverlay(mealName, protein, calories);
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Oscars Super Food Tracker Deluxe</h1>
+  
+  <h2>Totaler for dagen</h2>
+  <p style="text-align: center;">Totalt protein: <span id="total-protein">0</span> g</p>
+  <p style="text-align: center;">Totalt kalorier: <span id="total-calories">0</span></p>
+  
+  <table>
+    <tr>
+      <th>Måltid</th>
+      <th>Mengde spist (g)</th>
+      <th>Totalt protein (g)</th>
+      <th>Totalt kalorier</th>
+    </tr>
+    <!-- Radene har data-attributter for protein og kalorier per 100g -->
+    <tr class="meal-row" data-protein="27" data-calories="344">
+      <td class="meal-name">Ost</td>
+      <td>
+        <input type="number" class="quantity" value="0" min="0"
+               onfocus="this.select()"
+               onmouseup="return false;"
+               onchange="updateTotals()">
+      </td>
+      <td class="total-protein">0</td>
+      <td class="total-calories">0</td>
+    </tr>
+    <tr class="meal-row" data-protein="20" data-calories="205">
+      <td class="meal-name">Kjøttdeig</td>
+      <td>
+        <input type="number" class="quantity" value="0" min="0"
+               onfocus="this.select()"
+               onmouseup="return false;"
+               onchange="updateTotals()">
+      </td>
+      <td class="total-protein">0</td>
+      <td class="total-calories">0</td>
+    </tr>
+    <tr class="meal-row" data-protein="22" data-calories="133">
+      <td class="meal-name">Karbonadedeig</td>
+      <td>
+        <input type="number" class="quantity" value="0" min="0"
+               onfocus="this.select()"
+               onmouseup="return false;"
+               onchange="updateTotals()">
+      </td>
+      <td class="total-protein">0</td>
+      <td class="total-calories">0</td>
+    </tr>
+    <tr class="meal-row" data-protein="13" data-calories="148">
+      <td class="meal-name">Egg L (~65g)</td>
+      <td>
+        <input type="number" class="quantity" value="0" min="0"
+               onfocus="this.select()"
+               onmouseup="return false;"
+               onchange="updateTotals()">
+      </td>
+      <td class="total-protein">0</td>
+      <td class="total-calories">0</td>
+    </tr>
+    <tr class="meal-row" data-protein="67" data-calories="533">
+      <td class="meal-name">Bacongull</td>
+      <td>
+        <input type="number" class="quantity" value="0" min="0"
+               onfocus="this.select()"
+               onmouseup="return false;"
+               onchange="updateTotals()">
+      </td>
+      <td class="total-protein">0</td>
+      <td class="total-calories">0</td>
+    </tr>
+    <tr class="meal-row" data-protein="23" data-calories="110">
+      <td class="meal-name">Kylling</td>
+      <td>
+        <input type="number" class="quantity" value="0" min="0"
+               onfocus="this.select()"
+               onmouseup="return false;"
+               onchange="updateTotals()">
+      </td>
+      <td class="total-protein">0</td>
+      <td class="total-calories">0</td>
+    </tr>
+    <tr class="meal-row" data-protein="3.3" data-calories="64">
+      <td class="meal-name">Melk</td>
+      <td>
+        <input type="number" class="quantity" value="0" min="0"
+               onfocus="this.select()"
+               onmouseup="return false;"
+               onchange="updateTotals()">
+      </td>
+      <td class="total-protein">0</td>
+      <td class="total-calories">0</td>
+    </tr>
+    <tr class="meal-row" data-protein="0" data-calories="42">
+      <td class="meal-name">Brus</td>
+      <td>
+        <input type="number" class="quantity" value="0" min="0"
+               onfocus="this.select()"
+               onmouseup="return false;"
+               onchange="updateTotals()">
+      </td>
+      <td class="total-protein">0</td>
+      <td class="total-calories">0</td>
+    </tr>
+  </table>
+  
+  <p class="signature">
+    "What did you get done last week?"
+  </p>
+  
+  <!-- Overlay for visning av ekstra info -->
+  <div id="mealOverlay">
+    <div class="content">
+      <h3 id="overlayMealName"></h3>
+      <p id="overlayProtein"></p>
+      <p id="overlayCalories"></p>
+      <p class="closeBtn" onclick="hideOverlay()">Lukk</p>
+    </div>
+  </div>
+</body>
+</html>
